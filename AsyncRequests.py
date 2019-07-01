@@ -79,9 +79,9 @@ def async_get(urls, num_workers=100, verbose=1):
 		while not q.empty():
 			time.sleep(0.1)
 	except KeyboardInterrupt:
-		print('KeyboardInterrupt')
 		for t in threads:
 			t.raise_exception()
+		print('KeyboardInterrupt')
 		sys.exit()
 	finally:
 		for i in range(num_workers):
