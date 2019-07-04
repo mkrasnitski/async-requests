@@ -37,9 +37,9 @@ def worker():
 		get_response(*args)
 		q.task_done()
 
-def get_response(url, i, verbose):
+def get_response(url, headers, i, verbose):
 	try:
-		responses[i] = requests.get(url, timeout=1000)
+		responses[i] = requests.get(url, headers=headers, timeout=1000)
 		# print(responses[i])`
 	except Exception as e:
 		print(e)
@@ -58,7 +58,7 @@ def get_response(url, i, verbose):
 			if percent_complete == 100:
 				print(str(numerator).rjust(len(str(denominator))) + f'/{denominator} [' + '='*25 + ']')
 
-def async_get(urls, num_workers=100, verbose=1):
+def async_get(urls, headers=None, num_workers=100, verbose=1):
 	global q
 	global responses
 	global percent_milestone
@@ -73,7 +73,7 @@ def async_get(urls, num_workers=100, verbose=1):
 		threads.append(t)
 
 	for i, url in enumerate(urls):
-		q.put((url, i, verbose))
+		q.put((url, headers, i, verbose))
 
 	try:
 		while not q.empty():
